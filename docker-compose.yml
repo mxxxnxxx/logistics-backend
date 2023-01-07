@@ -31,6 +31,8 @@ services:
       - DB_USERNAME=${DB_USERNAME:-phper}
       - DB_PASSWORD=${DB_PASSWORD:-secret}
 
+
+
   web:
     build:
       context: .
@@ -65,6 +67,21 @@ services:
       - MYSQL_USER=${DB_USERNAME:-phper}
       - MYSQL_PASSWORD=${DB_PASSWORD:-secret}
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD:-secret}
+
+  redis:
+    build:
+      context: .
+      dockerfile: ./infra/docker/redis/Dockerfile
+    ports:
+      - "6379:6379"
+    volumes:
+      - "./data/redis:/data"
+      - "./infra/docker/redis/redis.conf:/etc/redis.conf"
+    environment:
+      - CACHE_DRIVER=${CACHE_DRIVER:-redis}
+      - REDIS_HOST=${REDIS_HOST:-127.0.0.1}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-null}
+      - REDIS_PORT=${REDIS_PORT:-6379}
 
   mailhog:
     image: mailhog/mailhog
